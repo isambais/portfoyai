@@ -1,6 +1,6 @@
 # Use Case Diyagramı
 
-> **Proje:** PortföyAI · **Sürüm:** 1.2 · **Hafta:** 1
+> **Proje:** PortföyAI · **Sürüm:** 1.3 · **Hafta:** 1
 
 Bu doküman, PortföyAI sistemiyle etkileşime giren aktörleri ve her aktörün sistem üzerinde gerçekleştirdiği kullanım durumlarını (use case) gösterir. Okunabilirlik için diyagram iki parçaya ayrılmıştır:
 
@@ -10,9 +10,9 @@ Bu doküman, PortföyAI sistemiyle etkileşime giren aktörleri ve her aktörün
 ## 1. Kullanıcı Tarafı
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'fontFamily':'Arial', 'lineColor':'#64748B', 'clusterBkg':'#F8FAFC', 'clusterBorder':'#CBD5E1'}}}%%
-flowchart LR
-    %% ================= AKTÖRLER =================
+%%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Arial', 'lineColor':'#64748B', 'clusterBkg':'#F8FAFC', 'clusterBorder':'#CBD5E1'}}}%%
+flowchart TB
+    %% ================= AKTÖRLER (üst sıra) =================
     A((Admin))
     U((Kullanıcı))
     T((Telegram<br/>Botu))
@@ -20,51 +20,54 @@ flowchart LR
 
     %% ================= GRUPLAR =================
     subgraph G1[" Hesap "]
-        UC01([UC-01 Kayıt ol])
-        UC02([UC-02 Giriş yap])
-        UC03([UC-03 KVKK onayı ver])
-        UC04([UC-04 Şifre sıfırla])
-        UC05([UC-05 Hesabı sil / verimi indir])
+        UC01([UC-01<br/>Kayıt ol])
+        UC02([UC-02<br/>Giriş yap])
+        UC03([UC-03<br/>KVKK onayı ver])
+        UC04([UC-04<br/>Şifre sıfırla])
+        UC05([UC-05<br/>Hesabı sil / verimi indir])
     end
 
     subgraph G2[" Portföy "]
-        UC06([UC-06 Risk profili testini çöz])
-        UC07([UC-07 Portföy oluştur / düzenle])
-        UC08([UC-08 Öneriyi uygula])
-        UC09([UC-09 Portföy performansını görüntüle])
+        UC06([UC-06<br/>Risk profili testini çöz])
+        UC07([UC-07<br/>Portföy oluştur / düzenle])
+        UC08([UC-08<br/>Öneriyi uygula])
+        UC09([UC-09<br/>Portföy performansını görüntüle])
     end
 
     subgraph G3[" Analiz "]
-        UC10([UC-10 Günlük öneriyi gör])
-        UC11([UC-11 Kararın açıklamasını gör])
-        UC12([UC-12 Backtest çalıştır])
-        UC13([UC-13 Ajanları karşılaştır])
-        UC14([UC-14 İşlem geçmişini indir])
+        UC10([UC-10<br/>Günlük öneriyi gör])
+        UC11([UC-11<br/>Kararın açıklamasını gör])
+        UC12([UC-12<br/>Backtest çalıştır])
+        UC13([UC-13<br/>Ajanları karşılaştır])
+        UC14([UC-14<br/>İşlem geçmişini indir])
     end
 
     subgraph G4[" Bildirim "]
-        UC15([UC-15 Bildirim ayarlarını yönet])
-        UC16([UC-16 Telegram hesabını bağla])
-        UC17([UC-17 Telegram'dan durum sorgula])
+        UC15([UC-15<br/>Bildirim ayarlarını yönet])
+        UC16([UC-16<br/>Telegram hesabını bağla])
+        UC17([UC-17<br/>Telegram'dan durum sorgula])
     end
 
     %% ================= BAĞLANTILAR =================
     A -- genelleme --> U
+    %% görünmez bağlantı: dış sistemleri Kullanıcı ile aynı sıraya koyar
+    A ~~~ T
+    A ~~~ E
     U --- G1
     U --- G2
     U --- G3
     U --- G4
-    UC17 --- T
-    UC04 --- E
+    T --- UC17
+    E --- UC04
 
     UC01 -. include .-> UC03
     UC11 -. extend .-> UC10
 
     %% ================= STİL =================
-    classDef actor fill:#1E293B,stroke:#1E293B,color:#FFFFFF,font-weight:bold,font-size:22px
-    classDef ext fill:#475569,stroke:#475569,color:#FFFFFF,font-weight:bold,font-size:20px
-    classDef uc fill:#EEF2FF,stroke:#6366F1,stroke-width:1.5px,color:#1E1B4B,font-size:20px
-    classDef notif fill:#FDF4FF,stroke:#C026D3,stroke-width:1.5px,color:#4A044E,font-size:20px
+    classDef actor fill:#1E293B,stroke:#1E293B,color:#FFFFFF,font-weight:bold
+    classDef ext fill:#475569,stroke:#475569,color:#FFFFFF,font-weight:bold
+    classDef uc fill:#EEF2FF,stroke:#6366F1,stroke-width:1.5px,color:#1E1B4B
+    classDef notif fill:#FDF4FF,stroke:#C026D3,stroke-width:1.5px,color:#4A044E
 
     class U,A actor
     class T,E ext
@@ -75,7 +78,7 @@ flowchart LR
 ## 2. Sistem Tarafı
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'fontFamily':'Arial', 'lineColor':'#64748B', 'clusterBkg':'#F8FAFC', 'clusterBorder':'#CBD5E1'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Arial', 'lineColor':'#64748B', 'clusterBkg':'#F8FAFC', 'clusterBorder':'#CBD5E1'}}}%%
 flowchart TB
     %% ================= BİRİNCİL AKTÖRLER (üstte) =================
     Z((Zamanlayıcı))
@@ -83,17 +86,17 @@ flowchart TB
 
     %% ================= GRUPLAR =================
     subgraph G5[" Otomasyon "]
-        UC18([UC-18 Günlük veriyi çek])
-        UC19([UC-19 Haber duygu skorunu hesapla])
-        UC20([UC-20 Yeni öneri üret])
-        UC21([UC-21 Öneri bildirimi gönder])
-        UC22([UC-22 Haftalık e-posta özeti gönder])
-        UC23([UC-23 Drift kontrolü yap])
+        UC18([UC-18<br/>Günlük veriyi çek])
+        UC19([UC-19<br/>Haber duygu skorunu hesapla])
+        UC20([UC-20<br/>Yeni öneri üret])
+        UC21([UC-21<br/>Öneri bildirimi gönder])
+        UC22([UC-22<br/>Haftalık e-posta özeti gönder])
+        UC23([UC-23<br/>Drift kontrolü yap])
     end
 
     subgraph G6[" Yönetim "]
-        UC24([UC-24 Model performansını izle])
-        UC25([UC-25 Modeli yeniden eğit / geri al])
+        UC24([UC-24<br/>Model performansını izle])
+        UC25([UC-25<br/>Modeli yeniden eğit / geri al])
     end
 
     %% ================= İKİNCİL AKTÖRLER: dış sistemler (üst sırada) =================
@@ -116,10 +119,10 @@ flowchart TB
     UC23 -. tetikler .-> UC25
 
     %% ================= STİL =================
-    classDef actor fill:#1E293B,stroke:#1E293B,color:#FFFFFF,font-weight:bold,font-size:22px
-    classDef ext fill:#475569,stroke:#475569,color:#FFFFFF,font-weight:bold,font-size:20px
-    classDef auto fill:#ECFDF5,stroke:#10B981,stroke-width:1.5px,color:#064E3B,font-size:20px
-    classDef admin fill:#FFF7ED,stroke:#F97316,stroke-width:1.5px,color:#7C2D12,font-size:20px
+    classDef actor fill:#1E293B,stroke:#1E293B,color:#FFFFFF,font-weight:bold
+    classDef ext fill:#475569,stroke:#475569,color:#FFFFFF,font-weight:bold
+    classDef auto fill:#ECFDF5,stroke:#10B981,stroke-width:1.5px,color:#064E3B
+    classDef admin fill:#FFF7ED,stroke:#F97316,stroke-width:1.5px,color:#7C2D12
 
     class Z,A actor
     class V,T,E ext
