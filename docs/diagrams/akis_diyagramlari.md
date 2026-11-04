@@ -48,9 +48,7 @@ flowchart TD
 
     classDef err fill:#FEE2E2,stroke:#DC2626,color:#7F1D1D
     classDef ok fill:#DCFCE7,stroke:#16A34A,color:#14532D
-    Kod hatalı → sayaç +1 → 5 oldu mu?
-                 ├─ Hayır → tekrar dene
-                 └─ Evet → hesabı kilitle → "15 dakika sonra tekrar dene"
+    class E1,E2,E3,E4,E5,KL err
     class Y ok
 ```
 
