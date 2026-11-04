@@ -7,62 +7,57 @@ Bu doküman, PortföyAI sistemiyle etkileşime giren aktörleri ve her aktörün
 ## Diyagram
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Arial', 'lineColor':'#64748B', 'clusterBkg':'#F8FAFC', 'clusterBorder':'#CBD5E1'}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Arial', 'fontSize':'13px', 'lineColor':'#64748B', 'clusterBkg':'#F8FAFC', 'clusterBorder':'#CBD5E1'}, 'flowchart': {'nodeSpacing': 18, 'rankSpacing': 28, 'padding': 6, 'diagramPadding': 4}}}%%
 flowchart TB
     %% ================= AKTÖRLER (üst sıra) =================
     U((Kullanıcı))
     Z((Zamanlayıcı))
+    T((Telegram))
     A((Admin))
 
-    %% ================= GRUPLAR (alt sıra, yan yana) =================
+    %% ================= GRUPLAR =================
     subgraph G1[Hesap]
-        direction TB
-        UC01([UC-01<br/>Kayıt ol / Giriş yap])
-        UC02([UC-02<br/>KVKK onayı ver])
-        UC03([UC-03<br/>Hesabı sil / verimi indir])
+        UC01(UC-01 Kayıt / Giriş)
+        UC02(UC-02 KVKK onayı)
+        UC03(UC-03 Hesap sil / veri indir)
     end
 
     subgraph G2[Portföy]
-        direction TB
-        UC04([UC-04<br/>Risk profili testi])
-        UC05([UC-05<br/>Portföy oluştur / düzenle])
-        UC06([UC-06<br/>Öneriyi uygula])
+        UC04(UC-04 Risk profili testi)
+        UC05(UC-05 Portföy oluştur)
+        UC06(UC-06 Öneriyi uygula)
     end
 
     subgraph G3[Analiz]
-        direction TB
-        UC07([UC-07<br/>Günlük öneriyi gör])
-        UC08([UC-08<br/>Kararın açıklaması])
-        UC09([UC-09<br/>Backtest çalıştır])
-        UC10([UC-10<br/>Ajanları karşılaştır])
-        UC11([UC-11<br/>İşlem geçmişini indir])
+        UC07(UC-07 Günlük öneri)
+        UC08(UC-08 Karar açıklaması)
+        UC09(UC-09 Backtest)
+        UC10(UC-10 Ajan karşılaştırma)
+        UC11(UC-11 İşlem geçmişi indir)
     end
 
     subgraph G4[Otomasyon]
-        direction TB
-        UC12([UC-12<br/>Günlük veriyi çek])
-        UC13([UC-13<br/>Yeni öneri üret])
-        UC14([UC-14<br/>Bildirim gönder])
+        UC12(UC-12 Veri çek)
+        UC13(UC-13 Öneri üret)
+        UC14(UC-14 Bildirim gönder)
     end
 
     subgraph G5[Yönetim]
-        direction TB
-        UC15([UC-15<br/>Performansı izle])
-        UC16([UC-16<br/>Yeniden eğit / geri al])
+        UC15(UC-15 Performans izle)
+        UC16(UC-16 Yeniden eğit / geri al)
     end
-
-    T((Telegram<br/>Botu))
 
     %% ================= BAĞLANTILAR =================
     U --- G1 & G2 & G3
     Z --- G4
+    T --- G4
     A --- G5
-    G4 --- T
 
-    %% görünmez bağlantılar: grup içindeki kutuları alt alta dizer
+    %% görünmez bağlantılar: kutuları alt alta dizer (en fazla 3 satır)
     UC02 ~~~ UC03
     UC04 ~~~ UC05 ~~~ UC06
-    UC07 ~~~ UC08 ~~~ UC09 ~~~ UC10 ~~~ UC11
+    UC07 ~~~ UC08 ~~~ UC09
+    UC10 ~~~ UC11
     UC15 ~~~ UC16
 
     UC01 -. include .-> UC02
