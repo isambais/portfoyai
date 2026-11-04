@@ -6,75 +6,77 @@ Bu doküman, PortföyAI sistemiyle etkileşime giren aktörleri ve her aktörün
 
 ## Diyagram
 
+![PortföyAI Use Case Diyagramı](use_case.png)
+
+<details>
+<summary>Mermaid kaynak kodu</summary>
+
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Arial', 'fontSize':'13px', 'lineColor':'#64748B', 'clusterBkg':'#F8FAFC', 'clusterBorder':'#CBD5E1'}, 'flowchart': {'nodeSpacing': 18, 'rankSpacing': 28, 'padding': 6, 'diagramPadding': 4}}}%%
-flowchart TB
-    %% ================= AKTÖRLER (üst sıra) =================
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'fontFamily':'Arial', 'lineColor':'#64748B', 'clusterBkg':'#F8FAFC', 'clusterBorder':'#CBD5E1'}}}%%
+flowchart LR
+    %% ================= AKTÖRLER =================
     U((Kullanıcı))
     Z((Zamanlayıcı))
-    T((Telegram))
     A((Admin))
+    T((Telegram<br/>Botu))
 
     %% ================= GRUPLAR =================
-    subgraph G1[Hesap]
-        UC01(UC-01 Kayıt / Giriş)
-        UC02(UC-02 KVKK onayı)
-        UC03(UC-03 Hesap sil / veri indir)
+    subgraph G1[" Hesap "]
+        UC01([UC-01 Kayıt ol / Giriş yap])
+        UC02([UC-02 KVKK onayı ver])
+        UC03([UC-03 Hesabı sil / verimi indir])
     end
 
-    subgraph G2[Portföy]
-        UC04(UC-04 Risk profili testi)
-        UC05(UC-05 Portföy oluştur)
-        UC06(UC-06 Öneriyi uygula)
+    subgraph G2[" Portföy "]
+        UC04([UC-04 Risk profili testini çöz])
+        UC05([UC-05 Portföy oluştur / düzenle])
+        UC06([UC-06 Öneriyi uygula])
     end
 
-    subgraph G3[Analiz]
-        UC07(UC-07 Günlük öneri)
-        UC08(UC-08 Karar açıklaması)
-        UC09(UC-09 Backtest)
-        UC10(UC-10 Ajan karşılaştırma)
-        UC11(UC-11 İşlem geçmişi indir)
+    subgraph G3[" Analiz "]
+        UC07([UC-07 Günlük öneriyi gör])
+        UC08([UC-08 Kararın açıklamasını gör])
+        UC09([UC-09 Backtest çalıştır])
+        UC10([UC-10 Ajanları karşılaştır])
+        UC11([UC-11 İşlem geçmişini indir])
     end
 
-    subgraph G4[Otomasyon]
-        UC12(UC-12 Veri çek)
-        UC13(UC-13 Öneri üret)
-        UC14(UC-14 Bildirim gönder)
+    subgraph G4[" Otomasyon "]
+        UC12([UC-12 Günlük veriyi çek])
+        UC13([UC-13 Yeni öneri üret])
+        UC14([UC-14 Bildirim gönder])
     end
 
-    subgraph G5[Yönetim]
-        UC15(UC-15 Performans izle)
-        UC16(UC-16 Yeniden eğit / geri al)
+    subgraph G5[" Yönetim "]
+        UC15([UC-15 Model performansını izle])
+        UC16([UC-16 Modeli yeniden eğit / geri al])
     end
 
     %% ================= BAĞLANTILAR =================
-    U --- G1 & G2 & G3
+    U --- G1
+    U --- G2
+    U --- G3
     Z --- G4
-    T --- G4
     A --- G5
-
-    %% görünmez bağlantılar: kutuları alt alta dizer (en fazla 3 satır)
-    UC02 ~~~ UC03
-    UC04 ~~~ UC05 ~~~ UC06
-    UC07 ~~~ UC08 ~~~ UC09
-    UC10 ~~~ UC11
-    UC15 ~~~ UC16
+    UC14 --- T
 
     UC01 -. include .-> UC02
     UC12 -. tetikler .-> UC13
     UC13 -. include .-> UC14
 
     %% ================= STİL =================
-    classDef actor fill:#1E293B,stroke:#1E293B,color:#FFFFFF,font-weight:bold
-    classDef uc fill:#EEF2FF,stroke:#6366F1,stroke-width:1.5px,color:#1E1B4B
-    classDef auto fill:#ECFDF5,stroke:#10B981,stroke-width:1.5px,color:#064E3B
-    classDef admin fill:#FFF7ED,stroke:#F97316,stroke-width:1.5px,color:#7C2D12
+    classDef actor fill:#1E293B,stroke:#1E293B,color:#FFFFFF,font-weight:bold,font-size:22px
+    classDef uc fill:#EEF2FF,stroke:#6366F1,stroke-width:1.5px,color:#1E1B4B,font-size:20px
+    classDef auto fill:#ECFDF5,stroke:#10B981,stroke-width:1.5px,color:#064E3B,font-size:20px
+    classDef admin fill:#FFF7ED,stroke:#F97316,stroke-width:1.5px,color:#7C2D12,font-size:20px
 
     class U,Z,A,T actor
     class UC01,UC02,UC03,UC04,UC05,UC06,UC07,UC08,UC09,UC10,UC11 uc
     class UC12,UC13,UC14 auto
     class UC15,UC16 admin
 ```
+
+</details>
 
 **Gösterim:**
 - **Koyu daireler:** aktörler (sistemin dışındaki kişi veya sistemler)
