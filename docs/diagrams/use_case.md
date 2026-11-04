@@ -7,63 +7,73 @@ Bu doküman, PortföyAI sistemiyle etkileşime giren aktörleri ve her aktörün
 ## Diyagram
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'fontFamily':'Arial', 'lineColor':'#64748B', 'clusterBkg':'#F8FAFC', 'clusterBorder':'#CBD5E1'}}}%%
-flowchart LR
-    %% ================= AKTÖRLER =================
+%%{init: {'theme':'base', 'themeVariables': {'fontFamily':'Arial', 'lineColor':'#64748B', 'clusterBkg':'#F8FAFC', 'clusterBorder':'#CBD5E1'}}}%%
+flowchart TB
+    %% ================= AKTÖRLER (üst sıra) =================
     U((Kullanıcı))
     Z((Zamanlayıcı))
     A((Admin))
+
+    %% ================= GRUPLAR (alt sıra, yan yana) =================
+    subgraph G1[Hesap]
+        direction TB
+        UC01([UC-01<br/>Kayıt ol / Giriş yap])
+        UC02([UC-02<br/>KVKK onayı ver])
+        UC03([UC-03<br/>Hesabı sil / verimi indir])
+    end
+
+    subgraph G2[Portföy]
+        direction TB
+        UC04([UC-04<br/>Risk profili testi])
+        UC05([UC-05<br/>Portföy oluştur / düzenle])
+        UC06([UC-06<br/>Öneriyi uygula])
+    end
+
+    subgraph G3[Analiz]
+        direction TB
+        UC07([UC-07<br/>Günlük öneriyi gör])
+        UC08([UC-08<br/>Kararın açıklaması])
+        UC09([UC-09<br/>Backtest çalıştır])
+        UC10([UC-10<br/>Ajanları karşılaştır])
+        UC11([UC-11<br/>İşlem geçmişini indir])
+    end
+
+    subgraph G4[Otomasyon]
+        direction TB
+        UC12([UC-12<br/>Günlük veriyi çek])
+        UC13([UC-13<br/>Yeni öneri üret])
+        UC14([UC-14<br/>Bildirim gönder])
+    end
+
+    subgraph G5[Yönetim]
+        direction TB
+        UC15([UC-15<br/>Performansı izle])
+        UC16([UC-16<br/>Yeniden eğit / geri al])
+    end
+
     T((Telegram<br/>Botu))
 
-    %% ================= SİSTEM (gruplar) =================
-        subgraph G1[" Hesap "]
-            UC01([UC-01 Kayıt ol / Giriş yap])
-            UC02([UC-02 KVKK onayı ver])
-            UC03([UC-03 Hesabı sil / verimi indir])
-        end
-
-        subgraph G2[" Portföy "]
-            UC04([UC-04 Risk profili testini çöz])
-            UC05([UC-05 Portföy oluştur / düzenle])
-            UC06([UC-06 Öneriyi uygula])
-        end
-
-        subgraph G3[" Analiz "]
-            UC07([UC-07 Günlük öneriyi gör])
-            UC08([UC-08 Kararın açıklamasını gör])
-            UC09([UC-09 Backtest çalıştır])
-            UC10([UC-10 Ajanları karşılaştır])
-            UC11([UC-11 İşlem geçmişini indir])
-        end
-
-        subgraph G4[" Otomasyon "]
-            UC12([UC-12 Günlük veriyi çek])
-            UC13([UC-13 Yeni öneri üret])
-            UC14([UC-14 Bildirim gönder])
-        end
-
-        subgraph G5[" Yönetim "]
-            UC15([UC-15 Model performansını izle])
-            UC16([UC-16 Modeli yeniden eğit / geri al])
-        end
-
     %% ================= BAĞLANTILAR =================
-    U --- G1
-    U --- G2
-    U --- G3
+    U --- G1 & G2 & G3
     Z --- G4
     A --- G5
-    UC14 --- T
+    G4 --- T
+
+    %% görünmez bağlantılar: grup içindeki kutuları alt alta dizer
+    UC02 ~~~ UC03
+    UC04 ~~~ UC05 ~~~ UC06
+    UC07 ~~~ UC08 ~~~ UC09 ~~~ UC10 ~~~ UC11
+    UC15 ~~~ UC16
 
     UC01 -. include .-> UC02
     UC12 -. tetikler .-> UC13
     UC13 -. include .-> UC14
 
     %% ================= STİL =================
-    classDef actor fill:#1E293B,stroke:#1E293B,color:#FFFFFF,font-weight:bold,font-size:22px
-    classDef uc fill:#EEF2FF,stroke:#6366F1,stroke-width:1.5px,color:#1E1B4B,font-size:20px
-    classDef auto fill:#ECFDF5,stroke:#10B981,stroke-width:1.5px,color:#064E3B,font-size:20px
-    classDef admin fill:#FFF7ED,stroke:#F97316,stroke-width:1.5px,color:#7C2D12,font-size:20px
+    classDef actor fill:#1E293B,stroke:#1E293B,color:#FFFFFF,font-weight:bold
+    classDef uc fill:#EEF2FF,stroke:#6366F1,stroke-width:1.5px,color:#1E1B4B
+    classDef auto fill:#ECFDF5,stroke:#10B981,stroke-width:1.5px,color:#064E3B
+    classDef admin fill:#FFF7ED,stroke:#F97316,stroke-width:1.5px,color:#7C2D12
 
     class U,Z,A,T actor
     class UC01,UC02,UC03,UC04,UC05,UC06,UC07,UC08,UC09,UC10,UC11 uc
