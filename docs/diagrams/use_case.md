@@ -1,6 +1,6 @@
 # Use Case Diyagramı
 
-> **Proje:** PortföyAI (mobil uygulama) · **Sürüm:** 2.0 · **Hafta:** 1
+> **Proje:** PortföyAI (mobil uygulama) · **Sürüm:** 2.1 · **Hafta:** 1
 
 Bu doküman, PortföyAI sistemiyle etkileşime giren aktörleri ve her aktörün gerçekleştirdiği kullanım durumlarını gösterir. Her kullanım durumu **MoSCoW** yöntemiyle önceliklendirilmiştir.
 
@@ -22,6 +22,7 @@ flowchart TB
     U((Kullanıcı))
     A((Admin))
     E((E-posta<br/>Servisi))
+    S((SMS<br/>Servisi))
 
     %% ===== GRUPLAR =====
     subgraph G1[" Hesap "]
@@ -58,10 +59,16 @@ flowchart TB
     %% ===== BAĞLANTILAR =====
     A -- genelleme --> U
     A ~~~ E
+    A ~~~ S
     U --- G1
     U --- G2
     U --- G3
+    E --- UC01
+    E --- UC02
     E --- UC04
+    S --- UC01
+    S --- UC02
+    S --- UC04
     UC01 -. include .-> UC03
     UC10 -. include .-> UC09
 
@@ -73,7 +80,7 @@ flowchart TB
     classDef could fill:#FFFFFF,stroke:#94A3B8,stroke-width:1.5px,stroke-dasharray:5 4,color:#334155
 
     class U,A actor
-    class E ext
+    class E,S ext
     class UC01,UC02,UC03,UC07,UC12,UC13,UC14,UC16,UC17 must
     class UC04,UC05,UC08,UC15,UC19,UC22 should
     class UC06,UC09,UC10,UC11,UC18,UC20,UC21 could
@@ -225,17 +232,18 @@ flowchart TB
 | **Zamanlayıcı** | Birincil · sistem | Veri çekme, öneri üretme, alarm kontrolü, raporlama, drift kontrolü ve aylık yeniden eğitimi başlatan servis (APScheduler) |
 | **Veri Kaynakları** | İkincil · dış sistem | yfinance, TEFAS, TCMB EVDS ve KAP |
 | **Push Servisi** | İkincil · dış sistem | Telefona bildirim ileten servis (Expo Push) |
-| **E-posta Servisi** | İkincil · dış sistem | Şifre sıfırlama ve haftalık rapor e-postalarını ileten servis |
+| **E-posta Servisi** | İkincil · dış sistem | Kayıt ve giriş doğrulama kodları, şifre sıfırlama ve haftalık rapor e-postalarını ileten servis |
+| **SMS Servisi** | İkincil · dış sistem | Kayıt, giriş ve şifre sıfırlamada SMS doğrulama kodu gönderen servis (ör. Netgsm) |
 | **LLM Servisi** | İkincil · dış sistem | AI asistanın cevaplarını, yalnızca sistemin verdiği gerçek verilerle Türkçe metne dönüştüren dil modeli API'si |
 
 ## Kullanım Durumları
 
 | ID | Kullanım Durumu | Aktör | Grup | Öncelik | Kısa Açıklama |
 |---|---|---|---|---|---|
-| UC-01 | Kayıt ol | Kullanıcı | Hesap | 🔴 Must | E-posta ve şifre ile hesap oluşturma |
-| UC-02 | Giriş yap | Kullanıcı | Hesap | 🔴 Must | JWT ile oturum açma |
+| UC-01 | Kayıt ol | Kullanıcı, E-posta Servisi, SMS Servisi | Hesap | 🔴 Must | Ad, e-posta, telefon ve şifre ile hesap oluşturma; e-posta ve SMS doğrulama kodu |
+| UC-02 | Giriş yap | Kullanıcı, E-posta Servisi, SMS Servisi | Hesap | 🔴 Must | E-posta veya telefon + şifre; seçilen kanala gönderilen tek kullanımlık kodla iki aşamalı doğrulama (2FA), JWT ile oturum |
 | UC-03 | KVKK onayı ver | Kullanıcı | Hesap | 🔴 Must | Kayıtta aydınlatma metni ve "yatırım tavsiyesi değildir" uyarısının onaylanması |
-| UC-04 | Şifre sıfırla | Kullanıcı, E-posta Servisi | Hesap | 🟡 Should | E-postaya gönderilen bağlantı ile yeni şifre belirleme |
+| UC-04 | Şifre sıfırla | Kullanıcı, E-posta Servisi, SMS Servisi | Hesap | 🟡 Should | E-posta veya SMS ile gönderilen kodla yeni şifre belirleme |
 | UC-05 | Hesabı sil / verimi indir | Kullanıcı | Hesap | 🟡 Should | KVKK kapsamında kişisel verilerin indirilmesi veya silinmesi |
 | UC-06 | Dil ve tema seç | Kullanıcı | Hesap | ⚪ Could | Türkçe / İngilizce / Arapça; karanlık / aydınlık tema |
 | UC-07 | Risk profili testini çöz | Kullanıcı | Profil ve Plan | 🔴 Must | 6 soruluk test; modelin risk katsayısını belirler |
@@ -317,5 +325,7 @@ flowchart TB
 | **Toplam** | **17** | **22** | **12** | **51** |
 
 ## Sürüm Notları
+
+**v2.1:** Kayıt ve girişe e-posta ve SMS ile iki aşamalı doğrulama (2FA) eklendi; yeni dış aktör: **SMS Servisi**. Kullanıcı e-posta veya telefon numarasıyla giriş yapabilir.
 
 **v2.0:** Proje web uygulamasından **mobil uygulamaya** taşındı. Telegram botu yerine **push bildirimi** kullanılıyor. Finansal hedef, sağlık skoru, risk analizi, AI güven seviyesi, karar geçmişi, AI asistan, what-if / dijital ikiz, stres testi, kişisel alarm, ekonomik takvim ve veri güncelliği özellikleri eklendi. Tüm kullanım durumları MoSCoW ile önceliklendirildi. Çoklu ajan sistemi bir arka plan modülü olduğu için use case yerine sistem mimarisinde ele alınıyor.
