@@ -1,6 +1,6 @@
 # Fonksiyonel İsterler (FR)
 
-> **Proje:** PortföyAI · **Sürüm:** 1.0 · **Kaynak:** [use_case.md](../diagrams/use_case.md)
+> **Proje:** PortföyAI · **Sürüm:** 1.0 · **Kaynak:** [use_case.md](../diagrams/use_case.md) · **İlgili doküman:** [fonksiyonel_olmayan_isterler.md](fonksiyonel_olmayan_isterler.md)
 
 Her ister bir kullanım durumundan (UC) türetilmiştir ve önceliğini o kullanım durumundan alır. Kabul kriterleri, 9. haftadaki testlerin temelini oluşturur.
 
