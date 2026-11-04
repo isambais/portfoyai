@@ -63,6 +63,11 @@ Her ister bir kullanım durumundan (UC) türetilmiştir ve önceliğini o kullan
 | FR-045 | Tek bir varlık %40'ı veya tek bir sektör %50'yi aşarsa sistem yoğunlaşma uyarısı göstermelidir. | UC-17 | 🔴 M | Eşik aşıldığında risk ekranında uyarı görünür. |
 | FR-046 | Sistem, risk profiline uyum, yoğunlaşma ve tek faktöre bağımlılığı kontrol eden kural tabanlı bir sağlık raporu üretmeli; her bulgu için bir öneri sunmalıdır. | UC-18 | ⚪ C | Rapor her bulguyu "iyi / dikkat / risk" seviyesiyle gösterir. |
 | FR-047 | Kullanıcının portföyü, AI portföyü, sadece altın ve XU100 aynı dönemde getiri, maksimum düşüş, volatilite ve Sharpe ile karşılaştırılmalıdır. | UC-19 | 🟡 S | Dört
+| FR-048 | Kullanıcı varlıkları favori listesine ekleyip çıkarabilmelidir. | UC-20 | ⚪ C | Favoriler ana sayfada ayrı bir bölümde listelenir. |
+| FR-049 | Kullanıcı iki varlığı aynı grafikte, başlangıç değeri 100'e normalize edilmiş olarak karşılaştırabilmelidir. | UC-20 | ⚪ C | Seçilen iki varlık aynı grafikte farklı renklerle gösterilir. |
+| FR-050 | Kullanıcı bir işleme veya tarihe bağlı yatırım notu ekleyebilmelidir. | UC-21 | ⚪ C | Not, ilgili işlemin detayında görünür. |
+| FR-051 | İşlem geçmişi CSV ve Excel formatında dışa aktarılabilmelidir. | UC-22 | 🟡 S | İndirilen dosya tüm işlem alanlarını içerir ve Excel'de düzgün açılır. |
+| FR-052 | Sistem, portföy performansını ve risk metriklerini içeren bir PDF rapor oluşturabilmelidir. | UC-22 | 🟡 S | PDF'te özet, grafik ve metrik tablosu yer alır. |
 
 ## 4. AI Öneri
 
@@ -84,6 +89,28 @@ Her ister bir kullanım durumundan (UC) türetilmiştir ve önceliğini o kullan
 | FR-066 | Asistan kesin "al / sat" talimatı vermemeli ve her cevapta "yatırım tavsiyesi değildir" uyarısı yer almalıdır. | UC-26 | ⚪ C | Test setindeki "Hangi hisseyi alayım?" gibi sorulara talimat içermeyen cevap verilir. |
 | FR-067 | Asistan kullanımı kullanıcı başına günde 20 soruyla sınırlandırılmalıdır. | UC-26 | ⚪ C | 21. soruda "Günlük soru sınırına ulaştın" mesajı gösterilir. |
 | FR-068 | Sistem, karar üzerindeki trend, risk, haber ve makro bileşenlerinin katkısını yüzde olarak göstermelidir. | UC-27 | ⚪ C | Katkı yüzdelerinin toplamı %100'dür ve her öneri için ayrı hesaplanır. |
+
+## 5. Simülatör
+
+| ID | İster | Kaynak | Öncelik | Kabul kriteri |
+|---|---|---|---|---|
+| FR-069 | Kullanıcı başlangıç tutarı, aylık ekleme tutarı ve süre (1 / 3 / 5 yıl) girerek "Paramı nerede tutsam?" simülasyonu çalıştırabilmelidir. | UC-28 | 🔴 M | Geçerli girişlerle simülasyon 3 saniye içinde sonuç verir. |
+| FR-070 | Sistem aynı parayı yastık altı, mevduat (stopaj düşülmüş net faiz), gram altın, USD, XU100 ve PortföyAI stratejisiyle geçmiş veride karşılaştırmalı; sonuçları nominal ve reel TL olarak göstermelidir. | UC-28 | 🔴 M | Altı seçenek yan yana grafikte görünür; "yastık altı" seçeneğinin reel değeri enflasyon oranında azalır. |
+| FR-071 | Simülasyon ve backtest sonuçlarında "Geçmiş performans geleceği garanti etmez" uyarısı gösterilmelidir. | UC-28, UC-29 | 🔴 M | Her sonuç ekranında uyarı metni görünür. |
+| FR-072 | Kullanıcı tarih aralığı, varlık seti ve ajan seçerek backtest çalıştırabilmelidir. Tarih aralığı 2010 ile son veri tarihi arasında olmalı, başlangıç bitişten önce olmalı ve en az 2 varlık seçilmelidir. | UC-29 | 🔴 M | Kurala uymayan girişte ilgili hata mesajı gösterilir ve backtest başlamaz. |
+| FR-073 | Backtest yalnızca ilgili tarihte bilinen verileri kullanmalıdır (point-in-time): o tarihteki BIST 30 bileşimi, makro verilerin yayın tarihi, t+1 işlem kuralı, komisyon ve kayma. | UC-29 | 🔴 M | Otomatik sızıntı testi: bir tarihten sonraki veriler değiştirildiğinde o tarihten önceki backtest sonuçları değişmez. |
+| FR-074 | Backtest sonucunda değer grafiği, toplam ve yıllık getiri, maksimum düşüş, Sharpe ve işlem sayısı gösterilmeli; sonuçlar 1/N, XU100 ve Markowitz ile karşılaştırılmalıdır. | UC-29 | 🔴 M | Dört strateji aynı grafikte ve aynı metrik tablosunda görünür. |
+| FR-075 | 30 saniyeden uzun sürecek backtest'ler arka planda çalışmalı ve bittiğinde kullanıcıya bildirim gönderilmelidir. | UC-29 | 🟡 S | Uzun backtest başlatılınca "Hazır olunca haber vereceğiz" mesajı çıkar; bitince bildirim gelir. |
+| FR-076 | Aynı parametrelerle daha önce çalıştırılmış bir backtest'in sonucu önbellekten getirilmelidir. | UC-29 | 🟡 S | Tekrar çalıştırılan aynı backtest 2 saniye içinde sonuç verir. |
+| FR-077 | Kullanıcı mevcut portföyünün bir kopyası üzerinde varlık ekleyip çıkarabilmeli ve ağırlıkları değiştirebilmelidir; bu işlemler gerçek portföyü değiştirmemelidir. | UC-30 | 🟡 S | Kopyada yapılan değişiklikten sonra orijinal portföyün ağırlıkları aynı kalır. |
+| FR-078 | Kopya senaryonun geçmiş performansı orijinal portföyle karşılaştırılmalı ve senaryo kaydedilebilmelidir. | UC-30 | 🟡 S | Kaydedilen senaryo sonradan açılıp tekrar incelenebilir. |
+| FR-079 | Kullanıcı hazır şok senaryolarını (dolar +%20, altın −%15, BIST −%25, faiz +5 puan) veya kendi tanımladığı senaryoyu seçebilmelidir. | UC-31 | ⚪ C | Hazır senaryolar tek dokunuşla seçilebilir; özel senaryoda değerler elle girilebilir. |
+| FR-080 | Sistem şokun portföye tahmini etkisini varlık bazında göstermeli ve kullanılan hesaplama yöntemini açıklamalıdır. | UC-31 | ⚪ C | Toplam etki ve her varlığın katkısı TL ve yüzde olarak görünür; yöntem açıklaması ekranda yer alır. |
+| FR-081 | Ajan laboratuvarı; RL algoritmalarının (PPO, SAC, TD3 vb.), SSL var/yok ve KAN/MLP deneylerinin sonuçlarını getiri, Sharpe, Sortino ve maksimum düşüş ile sıralanabilir bir tabloda göstermelidir. | UC-32 | 🟡 S | Tablo herhangi bir sütuna göre sıralanabilir. |
+| FR-082 | Ajan laboratuvarında dönem seçilebilmeli (test dönemi, kriz dönemleri); sonuçlar 5 seed'in ortalaması ± standart sapma ve anlamlılık değeri (p) ile gösterilmelidir. | UC-32 | 🟡 S | Her hücrede "1,12 ± 0,08" gibi değerler, karşılaştırmalarda p-değeri görünür. |
+| FR-083 | Kullanıcı, modelin en kötü performans gösterdiği dönemleri inceleyebilmelidir. | UC-32 | 🟡 S | Modelin en çok kaybettiren 5 ayı, o aylardaki dağılımıyla birlikte listelenir. |
+| FR-084 | Sistem varlık türüne göre komisyon, stopaj, spread ve fon yönetim ücretini hesaplayarak tahmini net getiriyi göstermelidir. | UC-33 | ⚪ C | Brüt ve net getiri yan yana gösterilir; her maliyet kalemi ayrı listelenir. |
+| FR-085 | Vergi ve komisyon oranları bir yapılandırma dosyasından okunmalı ve ekranda geçerlilik tarihi ile "tahmini değerdir" uyarısıyla gösterilmelidir. | UC-33 | ⚪ C | Oranlar kod değiştirilmeden güncellenebilir; ekranda "Oranlar 01.11.2026 itibarıyla" bilgisi görünür. |
 
 ## 6. Öğren ve Bilgi
 
