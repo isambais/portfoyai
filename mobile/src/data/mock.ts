@@ -42,3 +42,15 @@ export const mockDataStatus = {
 };
 
 export const mockUnreadNotifications = 2; // FR-101
+
+
+export const mockCrisisAlert = {
+  active: true,                                  // FR-115: mockup'ta görünsün diye true
+  message: 'Kriz alarmı: USD/TRY bugün %3,4 yükseldi.',
+};
+
+export const mockFavorites = [                   // FR-048
+  { asset: 'Gram altın', price: 3125.4, changePct: 0.8 },
+  { asset: 'THYAO', price: 312.5, changePct: -1.2 },
+  { asset: 'USD/TRY', price: 41.85, changePct: 3.4 },
+];

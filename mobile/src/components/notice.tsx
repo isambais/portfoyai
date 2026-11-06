@@ -4,10 +4,11 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors, radius, spacing, typography } from '@/theme';
 
-type Variant = 'warning' | 'info';
+type Variant = 'danger' | 'warning' | 'info';
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
 const VARIANTS: Record<Variant, { text: string; bg: string; icon: IconName }> = {
+  danger:  { text: colors.negative.text, bg: colors.negative.background, icon: 'alert-circle-outline' },
   warning: { text: colors.warning.text, bg: colors.warning.background, icon: 'warning-outline' },
   info:    { text: colors.accent.default, bg: colors.accent.light, icon: 'information-circle-outline' },
 };

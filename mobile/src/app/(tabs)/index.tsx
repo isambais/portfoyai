@@ -7,7 +7,9 @@ import { Card } from '@/components/card';
 import { Notice } from '@/components/notice';
 import {
   type Confidence,
+  mockCrisisAlert,
   mockDataStatus,
+  mockFavorites,
   mockPortfolio,
   mockRecommendation,
   mockUnreadNotifications,
@@ -59,6 +61,14 @@ const r = mockRecommendation;
           </Pressable>
         </View>
         {/* ── UYARILAR (sadece gerekirse görünür) ────── */}
+                {mockCrisisAlert.active && (
+          <Notice
+            variant="danger"
+            message={mockCrisisAlert.message}
+            actionLabel="İncele"
+            onAction={() => {}}
+          />
+        )}
         {mockDataStatus.isStale && (
           <Notice variant="warning" message="Veriler güncel değil. Son başarılı güncelleme gösteriliyor." />
         )}
@@ -134,7 +144,26 @@ const r = mockRecommendation;
           ))}
         </Card>
 
-        {/* ── 5) ALT BİLGİ: FR-091 + NFR-058 ─────────── */}
+        {/* ── 5) FAVORİLER (FR-048) ─────────────────── */}
+        <Card>
+          <Text style={styles.h2}>Favoriler</Text>
+          {mockFavorites.map((f) => {
+            const up = f.changePct >= 0;
+            return (
+              <View key={f.asset} style={styles.rowBetween}>
+                <Text style={styles.body}>{f.asset}</Text>
+                <View style={styles.row}>
+                  <Text style={styles.bodyMedium}>{formatTL(f.price)}</Text>
+                  <Badge
+                    variant={up ? 'positive' : 'negative'}
+                    label={`${up ? '▲' : '▼'} ${formatPct(Math.abs(f.changePct))}`}
+                  />
+                </View>
+              </View>
+            );
+          })}
+        </Card>
+        {/* ── 6) ALT BİLGİ: FR-091 + NFR-058 ─────────── */}
         <Text style={styles.footer}>
           Son güncelleme: {mockDataStatus.updatedAt} · Kaynak: {mockDataStatus.source}
           {'\n'}Bu uygulama bir simülatördür; yatırım tavsiyesi değildir.
