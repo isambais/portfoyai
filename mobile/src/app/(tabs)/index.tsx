@@ -1,7 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { router } from 'expo-router';
 import { Badge } from '@/components/badge';
 import { Card } from '@/components/card';
 import { Notice } from '@/components/notice';
@@ -120,7 +120,7 @@ const r = mockRecommendation;
 
           <Text style={styles.caption}>{r.explanation}</Text>
 
-          <Pressable style={styles.button} onPress={() => {}}>
+          <Pressable style={styles.button} onPress={() => router.push({ pathname: '/oneri/[id]', params: { id: r.id } })}>
             <Text style={styles.buttonText}>Detayı gör</Text>
           </Pressable>
         </Card>

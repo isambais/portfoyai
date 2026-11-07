@@ -1,12 +1,20 @@
 import { Stack } from 'expo-router';
 
-// Uygulamanın en dış katmanı.
-// Stack = ekranların üst üste açıldığı yapı (geri tuşuyla bir öncekine dönülür).
+import { colors } from '@/theme';
+
 export default function RootLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      {/* Alt menülü ana bölüm */}
       <Stack.Screen name="(tabs)" />
+      <Stack.Screen
+        name="oneri/[id]"
+        options={{
+          headerShown: true,
+          title: 'Öneri detayı',
+          headerBackTitle: 'Geri',
+          headerTintColor: colors.text.primary,
+        }}
+      />
     </Stack>
   );
 }
