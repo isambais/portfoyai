@@ -1,6 +1,6 @@
 # Fonksiyonel İsterler (FR)
 
-> **Proje:** PortföyAI · **Sürüm:** 1.0 · **Kaynak:** [use_case.md](../diagrams/use_case.md) · **İlgili doküman:** [fonksiyonel_olmayan_isterler.md](fonksiyonel_olmayan_isterler.md)
+> **Proje:** PortföyAI · **Sürüm:** 1.1 · **Kaynak:** [use_case.md](../diagrams/use_case.md) · **İlgili doküman:** [fonksiyonel_olmayan_isterler.md](fonksiyonel_olmayan_isterler.md)
 
 Her ister bir kullanım durumundan (UC) türetilmiştir ve önceliğini o kullanım durumundan alır. Kabul kriterleri, 9. haftadaki testlerin temelini oluşturur.
 
@@ -68,6 +68,9 @@ Her ister bir kullanım durumundan (UC) türetilmiştir ve önceliğini o kullan
 | FR-050 | Kullanıcı bir işleme veya tarihe bağlı yatırım notu ekleyebilmelidir. | UC-21 | ⚪ C | Not, ilgili işlemin detayında görünür. |
 | FR-051 | İşlem geçmişi CSV ve Excel formatında dışa aktarılabilmelidir. | UC-22 | 🟡 S | İndirilen dosya tüm işlem alanlarını içerir ve Excel'de düzgün açılır. |
 | FR-052 | Sistem, portföy performansını ve risk metriklerini içeren bir PDF rapor oluşturabilmelidir. | UC-22 | 🟡 S | PDF'te özet, grafik ve metrik tablosu yer alır. |
+| FR-127 | Kullanıcı öneriyi uygulamadan önce her varlığın ağırlığını kaydırıcıyla değiştirebilmelidir. Ağırlık toplamı %100 ve tek varlık en fazla %40 kuralları geçerli kalmalıdır. | UC-53 | 🟡 S | Kurala uymayan düzenlemede "Uygula" butonu pasif kalır ve ihlal edilen kural gösterilir; uygulanan işlem "Düzenlendi" etiketiyle kaydedilir. |
+| FR-128 | Düzenleme sırasında portföyün tahmini volatilitesi, işlem maliyeti ve modelin önerisinden uzaklığı canlı olarak gösterilmelidir. | UC-53 | 🟡 S | Kaydırıcı hareket ettikçe üç değer 1 saniye içinde güncellenir; uzaklık "Model önerisinden %X uzaklaştın" olarak gösterilir. |
+| FR-129 | Kullanıcı sanal portföyde öneriden bağımsız al / sat işlemi yapabilmelidir; işlem t+1 kuralı ve maliyet hesabıyla uygulanmalıdır. | UC-54 | 🟡 S | Manuel işlem ertesi işlem gününün açılış fiyatıyla gerçekleşir ve işlem geçmişinde "Manuel" etiketiyle görünür. |
 
 ## 4. AI Öneri
 
@@ -89,6 +92,14 @@ Her ister bir kullanım durumundan (UC) türetilmiştir ve önceliğini o kullan
 | FR-066 | Asistan kesin "al / sat" talimatı vermemeli ve her cevapta "yatırım tavsiyesi değildir" uyarısı yer almalıdır. | UC-26 | ⚪ C | Test setindeki "Hangi hisseyi alayım?" gibi sorulara talimat içermeyen cevap verilir. |
 | FR-067 | Asistan kullanımı kullanıcı başına günde 20 soruyla sınırlandırılmalıdır. | UC-26 | ⚪ C | 21. soruda "Günlük soru sınırına ulaştın" mesajı gösterilir. |
 | FR-068 | Sistem, karar üzerindeki trend, risk, haber ve makro bileşenlerinin katkısını yüzde olarak göstermelidir. | UC-27 | ⚪ C | Katkı yüzdelerinin toplamı %100'dür ve her öneri için ayrı hesaplanır. |
+| FR-130 | Kullanıcı öneriyi reddedebilmeli ve isteğe bağlı bir sebep seçebilmelidir (Riskli buldum / Maliyet yüksek / Farklı düşünüyorum / Diğer). | UC-52 | 🔴 M | Reddedilen öneri karar geçmişinde "Reddedildi" etiketi ve seçilen sebeple görünür; FR-062'deki sonuç "Uygulasaydın" olarak hesaplanır. |
+| FR-131 | Her önerinin durumu kaydedilmelidir: bekliyor, uygulandı, düzenlenerek uygulandı, reddedildi veya süresi doldu. Yeni öneri üretildiğinde bekleyen öneri "süresi doldu" durumuna geçmelidir. | UC-52 | 🔴 M | Karar geçmişindeki her öneride durum etiketi görünür; aynı portföyde aynı anda en fazla bir "bekliyor" durumunda öneri bulunur. |
+| FR-132 | Her öneride en az 3 hazır soru sunulmalıdır ("Neden bu değişiklik?", "Riskim ne?", "Uygulamazsam ne olur?"). Cevaplar LLM kullanılmadan, yalnızca modelin girdileri, çıktıları ve maliyet hesabından şablonla üretilmelidir. | UC-55 | 🔴 M | Soruya dokunulunca cevap 1 saniye içinde görünür; cevaptaki her sayı veritabanındaki değerle aynıdır. |
+| FR-133 | Öneri gösterilmeden önce kullanıcıdan en çok değişen varlığın yönünü tahmin etmesi istenmelidir (▲ Artırır / – Aynı / ▼ Azaltır). Bu adım atlanabilmelidir. | UC-56 | 🟡 S | Tahmin girildikten sonra öneri açılır ve tahminin modelle uyuşup uyuşmadığı gösterilir; "Atla" seçilirse öneri doğrudan açılır. |
+| FR-134 | Tahminden 1 ay sonra kullanıcının tahmini, modelin kararı ve varlığın gerçekleşen fiyat yönü karşılaştırılmalı; kullanıcının doğru tahmin oranı gösterilmelidir. | UC-56 | 🟡 S | 1 ayı dolan her tahmin için "Sen / Model / Gerçek" karşılaştırması ve toplam doğru tahmin yüzdesi görünür. |
+| FR-135 | Kullanıcı temkinli / dengeli / cesur kaydırıcısıyla günün önerisinin her risk seviyesindeki halini görebilmelidir. Bu önizleme risk profilini değiştirmemelidir. | UC-57 | ⚪ C | Kaydırıcı değiştirildiğinde ilgili profilin ağırlıkları 1 saniye içinde gösterilir; kayıtlı risk profili aynı kalır. |
+| FR-136 | Sistem her gün, her portföy için üç risk profilinin (temkinli, dengeli, cesur) önerisini üretip saklamalıdır. | UC-57 | ⚪ C | Her iş günü için portföy başına 3 öneri kaydı oluşur; üçünün ağırlık toplamı da %100'dür. |
+| FR-137 | Sistem aylık karar karnesi göstermelidir: uygulanan, reddedilen ve düzenlenen öneri sayıları, her grubun ortalama 1 aylık sonucu ve model portföyü ile kullanıcı portföyü arasındaki fark (TL). | UC-58 | 🟡 S | Karnedeki sayılar karar geçmişindeki durum kayıtlarıyla birebir uyuşur; fark TL ve yüzde olarak görünür. |
 
 ## 5. Simülatör
 

@@ -12,6 +12,9 @@ Ne yapar?
 Kullanım (repo kök klasöründe):
   python scripts/create_issues.py --dry-run   # önce sadece ne yapacağını göster
   python scripts/create_issues.py             # gerçekten oluştur
+
+  Sonradan eklenen use case'ler için (kopya oluşturmamak için) sadece onları seç:
+  python scripts/create_issues.py --only UC-52,UC-53 --dry-run
 """
 import argparse
 import re
@@ -244,6 +247,7 @@ def create_issue(title, body, labels, milestone, dry):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true", help="Hiçbir şey oluşturmadan sadece listele")
+    ap.add_argument("--only", help="Sadece bu use case'lerin issue'larını aç (ör. UC-52,UC-53); NFR issue'ları atlanır")
     a = ap.parse_args()
     dry = a.dry_run
     if hasattr(sys.stdout, "reconfigure"):
@@ -262,12 +266,20 @@ def main():
     ensure_milestones(dry)
 
     print("4) Issue'lar" + (" (deneme)" if dry else ""))
-    for uc in ucs.values():
+    if a.only:
+        wanted = [x.strip() for x in a.only.split(",")]
+        missing = [x for x in wanted if x not in ucs]
+        if missing:
+            sys.exit(f"Bulunamayan use case: {', '.join(missing)}")
+        selected, cats = [ucs[x] for x in wanted], []
+    else:
+        selected = list(ucs.values())
+    for uc in selected:
         create_issue(*uc_issue(uc), dry)
     for cat in cats:
         create_issue(*nfr_issue(cat), dry)
 
-    print(f"\nBitti: {len(ucs) + len(cats)} issue" + (" (deneme modunda hiçbir şey oluşturulmadı)" if dry else ""))
+    print(f"\nBitti: {len(selected) + len(cats)} issue" + (" (deneme modunda hiçbir şey oluşturulmadı)" if dry else ""))
 
 
 if __name__ == "__main__":

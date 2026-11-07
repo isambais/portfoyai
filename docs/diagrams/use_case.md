@@ -1,6 +1,6 @@
 # Use Case Diyagramı
 
-> **Proje:** PortföyAI (mobil uygulama) · **Sürüm:** 2.1 · **Hafta:** 1
+> **Proje:** PortföyAI (mobil uygulama) · **Sürüm:** 2.2 · **Hafta:** 1
 
 Bu doküman, PortföyAI sistemiyle etkileşime giren aktörleri ve her aktörün gerçekleştirdiği kullanım durumlarını gösterir. Her kullanım durumu **MoSCoW** yöntemiyle önceliklendirilmiştir.
 
@@ -54,6 +54,8 @@ flowchart TB
         UC20([UC-20<br/>Favori varlıklar])
         UC21([UC-21<br/>Yatırım notu ekle])
         UC22([UC-22<br/>Rapor ve geçmişi dışa aktar])
+        UC53([UC-53<br/>Öneriyi düzenleyerek uygula])
+        UC54([UC-54<br/>Manuel al / sat işlemi yap])
     end
 
     %% ===== BAĞLANTILAR =====
@@ -71,6 +73,7 @@ flowchart TB
     S --- UC04
     UC01 -. include .-> UC03
     UC10 -. include .-> UC09
+    UC53 -. extend .-> UC14
 
     %% ===== STİL (renk = öncelik) =====
     classDef actor fill:#1E293B,stroke:#1E293B,color:#FFFFFF,font-weight:bold
@@ -82,7 +85,7 @@ flowchart TB
     class U,A actor
     class E,S ext
     class UC01,UC02,UC03,UC07,UC12,UC13,UC14,UC16,UC17 must
-    class UC04,UC05,UC08,UC15,UC19,UC22 should
+    class UC04,UC05,UC08,UC15,UC19,UC22,UC53,UC54 should
     class UC06,UC09,UC10,UC11,UC18,UC20,UC21 could
 ```
 
@@ -101,6 +104,11 @@ flowchart TB
         UC25([UC-25<br/>AI karar geçmişini incele])
         UC26([UC-26<br/>AI asistana soru sor])
         UC27([UC-27<br/>Ajan katkılarını gör])
+        UC52([UC-52<br/>Öneriyi reddet])
+        UC55([UC-55<br/>Öneriye hazır soru sor])
+        UC56([UC-56<br/>Öneriyi tahmin et])
+        UC57([UC-57<br/>Risk seviyesine göre önizle])
+        UC58([UC-58<br/>Karar karnesini gör])
     end
 
     subgraph G5[" Simülatör "]
@@ -133,6 +141,11 @@ flowchart TB
     L --- UC26
     UC24 -. extend .-> UC23
     UC25 -. extend .-> UC23
+    UC52 -. extend .-> UC23
+    UC55 -. extend .-> UC23
+    UC56 -. extend .-> UC23
+    UC57 -. extend .-> UC23
+    UC58 -. include .-> UC25
 
     %% ===== STİL (renk = öncelik) =====
     classDef actor fill:#1E293B,stroke:#1E293B,color:#FFFFFF,font-weight:bold
@@ -143,9 +156,9 @@ flowchart TB
 
     class U actor
     class L ext
-    class UC23,UC24,UC25,UC28,UC29,UC36 must
-    class UC30,UC32,UC34,UC37,UC38,UC39 should
-    class UC26,UC27,UC31,UC33,UC35 could
+    class UC23,UC24,UC25,UC28,UC29,UC36,UC52,UC55 must
+    class UC30,UC32,UC34,UC37,UC38,UC39,UC56,UC58 should
+    class UC26,UC27,UC31,UC33,UC35,UC57 could
 ```
 
 ## 3. Sistem Tarafı – Otomasyon ve Yönetim
@@ -221,7 +234,7 @@ flowchart TB
 | `tetikler` | Bir iş tamamlandığında diğerini otomatik başlatır |
 | `genelleme` | Admin, Kullanıcı'nın tüm yeteneklerine sahiptir (kalıtım) |
 
-> **Not:** Klasik UML'de aktör her kullanım durumuna ayrı ayrı bağlanır. 51 kullanım durumu olduğu için okunabilirliği artırmak amacıyla aktörler işlevsel gruplara bağlanmıştır. Bir aktörün gruba bağlı olması, o gruptaki tüm işleri yapabildiği anlamına gelir.
+> **Not:** Klasik UML'de aktör her kullanım durumuna ayrı ayrı bağlanır. 58 kullanım durumu olduğu için okunabilirliği artırmak amacıyla aktörler işlevsel gruplara bağlanmıştır. Bir aktörün gruba bağlı olması, o gruptaki tüm işleri yapabildiği anlamına gelir.
 
 ## Aktörler
 
@@ -291,6 +304,13 @@ flowchart TB
 | UC-49 | Modeli yeniden eğit / geri al | Admin, Zamanlayıcı | Yönetim | 🟡 Should | Admin elle; Zamanlayıcı ayda bir veya drift tetiklemesiyle |
 | UC-50 | Model sürümleri ve deney kayıtları | Admin | Yönetim | 🟡 Should | MLflow deney kayıtları ve yayındaki model sürümü |
 | UC-51 | Sistem ve veri durumunu izle | Admin | Yönetim | 🟡 Should | Son veri çekme zamanı, hatalar ve servis durumu |
+| UC-52 | Öneriyi reddet | Kullanıcı | AI Öneri | 🔴 Must | Öneriyi bilinçli olarak reddetme ve isteğe bağlı sebep seçme; ret karar geçmişine kaydedilir |
+| UC-53 | Öneriyi düzenleyerek uygula | Kullanıcı | Portföy | 🟡 Should | Uygulamadan önce ağırlıkları kaydırıcılarla değiştirme; risk ve maliyet etkisi canlı gösterilir |
+| UC-54 | Manuel al / sat işlemi yap | Kullanıcı | Portföy | 🟡 Should | Sanal portföyde öneriden bağımsız kendi işlemini yapma |
+| UC-55 | Öneriye hazır soru sor | Kullanıcı | AI Öneri | 🔴 Must | "Neden bu değişiklik?", "Riskim ne?" gibi hazır sorulara modelin verisinden şablonla cevap |
+| UC-56 | Öneriyi tahmin et | Kullanıcı | AI Öneri | 🟡 Should | "Sen ne yapardın?": öneri gösterilmeden önce yön tahmini; 1 ay sonra sonuç karşılaştırması |
+| UC-57 | Risk seviyesine göre önizle | Kullanıcı | AI Öneri | ⚪ Could | Temkinli / dengeli / cesur kaydırıcısıyla önerinin nasıl değiştiğini görme |
+| UC-58 | Karar karnesini gör | Kullanıcı | AI Öneri | 🟡 Should | Aylık uygulanan, reddedilen ve düzenlenen önerilerin sonuçları; model ve kullanıcı portföyü farkı |
 
 ## İlişkiler
 
@@ -300,6 +320,12 @@ flowchart TB
 | UC-10 → UC-09 | include | Sağlık skoru, gelir-gider bilgisi olmadan hesaplanamaz |
 | UC-24 → UC-23 | extend | Kullanıcı öneriye bakarken isterse açıklamayı açar |
 | UC-25 → UC-23 | extend | Kullanıcı öneriden geçmiş kararlara geçebilir |
+| UC-52 → UC-23 | extend | Kullanıcı öneriye bakarken isterse reddeder |
+| UC-53 → UC-14 | extend | Kullanıcı öneriyi uygularken isterse ağırlıkları değiştirir |
+| UC-55 → UC-23 | extend | Kullanıcı öneriye bakarken isterse hazır sorulardan birini sorar |
+| UC-56 → UC-23 | extend | Öneri gösterilmeden önce kullanıcı isterse tahminini girer |
+| UC-57 → UC-23 | extend | Kullanıcı isterse önerinin farklı risk seviyelerindeki halini görür |
+| UC-58 → UC-25 | include | Karar karnesi her zaman karar geçmişindeki kayıtlardan hesaplanır |
 | UC-40 → UC-41 | include | Veri çekilirken haber duygu skoru da her zaman hesaplanır |
 | UC-40 → UC-42 | tetikler | Veri çekildikten sonra öneri üretimi otomatik başlar |
 | UC-43 → UC-42 | extend | Bildirim yalnızca dağılım önemli ölçüde değiştiğinde gönderilir |
@@ -315,16 +341,18 @@ flowchart TB
 |---|---|---|---|---|
 | Hesap | 3 | 2 | 1 | 6 |
 | Profil ve Plan | 1 | 1 | 3 | 5 |
-| Portföy | 5 | 3 | 3 | 11 |
-| AI Öneri | 3 | 0 | 2 | 5 |
+| Portföy | 5 | 5 | 3 | 13 |
+| AI Öneri | 5 | 2 | 3 | 10 |
 | Simülatör | 2 | 2 | 2 | 6 |
 | Öğren ve Bilgi | 1 | 1 | 1 | 3 |
 | Bildirim | 0 | 3 | 0 | 3 |
 | Otomasyon | 2 | 6 | 0 | 8 |
 | Yönetim | 0 | 4 | 0 | 4 |
-| **Toplam** | **17** | **22** | **12** | **51** |
+| **Toplam** | **19** | **26** | **13** | **58** |
 
 ## Sürüm Notları
+
+**v2.2:** Kullanıcı ile öneri arasındaki etkileşim genişletildi: öneriyi **reddetme** (UC-52), **düzenleyerek uygulama** (UC-53), **manuel işlem** (UC-54), **hazır sorular** (UC-55), **"Sen ne yapardın?" tahmini** (UC-56), **risk seviyesine göre önizleme** (UC-57) ve **karar karnesi** (UC-58). Böylece modelin performansı ile kullanıcının kendi kararlarının performansı ayrı ayrı ölçülebilir.
 
 **v2.1:** Kayıt ve girişe e-posta ve SMS ile iki aşamalı doğrulama (2FA) eklendi; yeni dış aktör: **SMS Servisi**. Kullanıcı e-posta veya telefon numarasıyla giriş yapabilir.
 
